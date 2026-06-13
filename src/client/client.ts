@@ -48,7 +48,7 @@ const MAX_BACKOFF_MS = 60_000;
 export class AsanaClient {
   private readonly accessToken: string;
   private readonly baseUrl: string;
-  private readonly fetchImpl: typeof fetch;
+  private readonly fetchImpl?: typeof fetch;
   private readonly maxRetries: number;
   private readonly timeoutMs: number;
   private readonly retryBaseDelayMs: number;
@@ -59,7 +59,7 @@ export class AsanaClient {
     }
     this.accessToken = options.accessToken;
     this.baseUrl = (options.baseUrl ?? 'https://app.asana.com/api/1.0').replace(/\/+$/, '');
-    this.fetchImpl = options.fetchImpl ?? fetch;
+    this.fetchImpl = options.fetchImpl;
     this.maxRetries = options.maxRetries ?? 3;
     this.timeoutMs = options.timeoutMs ?? 30_000;
     this.retryBaseDelayMs = options.retryBaseDelayMs ?? 500;
@@ -269,9 +269,12 @@ export class AsanaClient {
 
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), this.timeoutMs);
+      // Resolved at call time (not construction) so late polyfills and
+      // test-injected globals are honored.
+      const fetchFn = this.fetchImpl ?? globalThis.fetch;
       let response: Response;
       try {
-        response = await this.fetchImpl(url.toString(), {
+        response = await fetchFn(url.toString(), {
           method,
           headers: {
             Authorization: `Bearer ${this.accessToken}`,

@@ -28,6 +28,20 @@ describe('constructor', () => {
     expect(() => new AsanaClient({ accessToken: '' })).toThrow(/accessToken/);
   });
 
+  it('resolves globalThis.fetch at CALL time, not construction (late polyfill/test mock)', async () => {
+    const original = globalThis.fetch;
+    const client = new AsanaClient({ accessToken: 'tok', retryBaseDelayMs: 1 });
+    const swapped = vi.fn(async () => json({ data: { gid: 'late' } }));
+    globalThis.fetch = swapped as unknown as typeof fetch;
+    try {
+      const task = await client.getTask('1');
+      expect(task.gid).toBe('late');
+      expect(swapped).toHaveBeenCalledTimes(1);
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
   it('strips trailing slashes from baseUrl', async () => {
     const { client, fetchImpl } = mockClient([() => json({ data: { gid: '1' } })], {
       baseUrl: 'https://example.test/api/1.0///',

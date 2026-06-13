@@ -1,0 +1,66 @@
+{
+  "name": "asana-mcp",
+  "version": "1.0.0",
+  "description": "MCP server + typed TypeScript client for the Asana API. Read tools plus guarded, configurable write access (read_only / restricted / full). No delete operations by design.",
+  "bin": {
+    "asana-mcp": "build/bin.js"
+  },
+  "main": "build/client/index.js",
+  "types": "build/client/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/client/index.d.ts",
+      "default": "./build/client/index.js"
+    },
+    "./client": {
+      "types": "./build/client/index.d.ts",
+      "default": "./build/client/index.js"
+    },
+    "./server": {
+      "types": "./build/server/index.d.ts",
+      "default": "./build/server/index.js"
+    }
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc && node -e \"const fs=require('fs');fs.chmodSync('build/bin.js',0o755)\"",
+    "prepare": "npm run build",
+    "test": "vitest run",
+    "inspector": "npx @modelcontextprotocol/inspector build/bin.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^5.3.3",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "asana",
+    "tasks",
+    "project-management",
+    "claude",
+    "ai",
+    "api-client",
+    "typescript"
+  ],
+  "author": "Optimize Overseas",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/optimize-overseas/asana-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/optimize-overseas/asana-mcp/issues"
+  },
+  "homepage": "https://github.com/optimize-overseas/asana-mcp#readme"
+}

@@ -7,7 +7,7 @@ export { loadConfig } from './config';
 export type { ServerConfig, WriteMode } from './config';
 export { registerTools } from './tools';
 
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 
 /**
  * Build (but do not connect) the MCP server instance. Exposed for embedding

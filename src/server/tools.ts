@@ -156,7 +156,7 @@ function registerReadTools(server: McpServer, client: AsanaClient, config: Serve
 }
 
 const customFieldsParam = z
-  .record(z.union([z.string(), z.number(), z.null()]))
+  .record(z.string(), z.union([z.string(), z.number(), z.null()]))
   .optional()
   .describe('Map of custom field GID -> new value (text, number, or enum option GID)');
 
